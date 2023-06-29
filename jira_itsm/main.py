@@ -164,6 +164,10 @@ class JiraPlugin(PluginBase):
         # Set fields with nested structure
         body["fields"]["issuetype"] = {"name": issue_type}
         body["fields"]["project"] = {"id": project_id}
+        if "customfield_10056" in mappings:
+           body["fields"]["customfield_10056"] = {"value": str(body["fields"]["customfield_10056"])}
+        if "customfield_10039" in mappings:
+           body["fields"]["customfield_10039"] = {"value": str(body["fields"]["customfield_10039"])}
         if "summary" in mappings:
             body["fields"]["summary"] = body["fields"]["summary"].replace(
                 "\n", " "
@@ -201,6 +205,9 @@ class JiraPlugin(PluginBase):
         )
 
         if response.status_code == 201:
+            self.logger.info(
+                f"Request Succesfull - Request body: {json.dumps(body)}"
+            )
             result = response.json()
             # Fetch the recently created issue
             issue = self._get_issue(result.get("key"))
@@ -219,13 +226,19 @@ class JiraPlugin(PluginBase):
                 self.update_task(task, alert, jira_comment, queue)
             return task
         elif response.status_code == 400:
+            self.logger.info(
+                f"Request body: {json.dumps(body)}"
+            )
             self.logger.error(
-                f"Jira ITSM: Error occurred. {'; '.join(response.json().get('errors', {}).values())} \nRequest body: {json.dumps(body)}"
+                f"Jira ITSM: Error occurred. {'; '.join(response.json().get('errors', {}).values())}"
             )
             raise requests.HTTPError(
                 "Jira ITSM: Could not create the Jira ticket."
             )
         else:
+            self.logger.info(
+                f"Request body: {json.dumps(body)}"
+            )
             raise requests.HTTPError(
                 f"Jira ITSM: Could not create the Jira ticket. Request body: {json.dumps(body)}"
             )
