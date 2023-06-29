@@ -1,3 +1,7 @@
+# 1.0.4
+## Added
+- Added debug info to ticket creation issues.
+
 # 1.0.3
 ## Added
 - Added support for labels while creating issues.
