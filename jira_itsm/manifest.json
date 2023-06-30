@@ -4,7 +4,7 @@
   "id": "jira_itsm",
   "pulling_supported": false,
   "receiving_supported": true,
-  "version": "1.0.7-beta",
+  "version": "1.0.4-beta",
   "configuration": [
     {
       "label": "Authentication",
