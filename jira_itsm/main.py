@@ -157,17 +157,20 @@ class JiraPlugin(PluginBase):
             raise requests.HTTPError(
                 "Jira ITSM: Could not create the Jira ticket."
             )
-        self.logger.info(f"Jira ITSM: Printing mappings: {mappings}, {create_meta}.")
+        self.logger.info(f"Jira ITSM Info: Printing mappings and meta: {mappings}, {create_meta}.")
         create_meta = create_meta.get("projects")[0].get("issuetypes")[0]
+        self.logger.info(f"Jira ITSM Info: Printing meta: {create_meta}.")
         mappings = self._filter_mappings(create_meta, mappings)
+        self.logger.info(f"Jira ITSM Info: Printing mappings : {mappings}.")
         body = {"fields": mappings}
+        self.logger.info(f"Jira ITSM Info: Printing pre-processed body: {body}.")
         # Set fields with nested structure
         body["fields"]["issuetype"] = {"name": issue_type}
         body["fields"]["project"] = {"id": project_id}
-        if "customfield_10056" in mappings:
-           body["fields"]["customfield_10056"] = {"value": str(body["fields"]["customfield_10056"])}
-        if "customfield_10039" in mappings:
-           body["fields"]["customfield_10039"] = {"value": str(body["fields"]["customfield_10039"])}
+        '''if "customfield_10056" in mappings:
+           body["fields"]["customfield_10056"] = {"value": str(body["fields"]["customfield_10056"])}'''
+        '''if "customfield_10039" in mappings:
+           body["fields"]["customfield_10039"] = {"value": str(body["fields"]["customfield_10039"])}'''
         if "summary" in mappings:
             body["fields"]["summary"] = body["fields"]["summary"].replace(
                 "\n", " "
@@ -191,6 +194,7 @@ class JiraPlugin(PluginBase):
                 self.logger.error(
                     f"JIRA ITSM: Error occurred while parsing label: {err}"
                 )
+        self.logger.info(f"Jira ITSM Info: Printing post-processed body: {body}.")
         headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
