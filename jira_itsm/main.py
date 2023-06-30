@@ -193,7 +193,7 @@ class JiraPlugin(PluginBase):
                     try:
                         mappings[key] = json.loads(value)
                     except json.JSONDecodeError:
-                    self.logger.error(f"Couldn't parse JSON for key {key}, value {value}")
+                       self.logger.error(f"Couldn't parse JSON for key {key}, value {value}")
         self.logger.info(f"Jira ITSM Info: Printing post-processed body: {body}.")
         headers = {
             "Accept": "application/json",
