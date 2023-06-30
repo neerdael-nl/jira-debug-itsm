@@ -160,7 +160,6 @@ class JiraPlugin(PluginBase):
         create_meta = create_meta.get("projects")[0].get("issuetypes")[0]
         mappings = self._filter_mappings(create_meta, mappings)
         body = {"fields": mappings}
-        self.logger.info(f"Jira ITSM Info: Printing pre-processed body: {body}.")
         # Set fields with nested structure
         body["fields"]["issuetype"] = {"name": issue_type}
         body["fields"]["project"] = {"id": project_id}
@@ -193,8 +192,7 @@ class JiraPlugin(PluginBase):
                     try:
                         mappings[key] = json.loads(value)
                     except json.JSONDecodeError:
-                       self.logger.error(f"Couldn't parse JSON for key {key}, value {value}")
-        self.logger.info(f"Jira ITSM Info: Printing post-processed body: {body}.")
+                       self.logger.error(f"Jira ITSM Error: Couldn't parse JSON for key {key}, value {value}")
         headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
